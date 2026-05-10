@@ -36,6 +36,18 @@ Or with Docker:
 docker build -t reclip . && docker run -p 8899:8899 reclip
 ```
 
+### Windows One-Click Docker Launcher
+
+On Windows, double-click `start-reclip-docker.bat` to build/start ReClip with Docker and open <http://localhost:8899>.
+
+To create a Desktop shortcut:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\create-desktop-shortcut.ps1
+```
+
+To stop the app, double-click `stop-reclip-docker.bat`.
+
 ## Usage
 
 1. Paste one or more video URLs into the input box
