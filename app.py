@@ -7,17 +7,32 @@ import threading
 from flask import Flask, request, jsonify, send_file, render_template
 
 app = Flask(__name__)
-DOWNLOAD_DIR = os.path.join(os.path.dirname(__file__), "downloads")
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+DOWNLOAD_DIR = os.path.join(APP_DIR, "downloads")
+SCRIPTS_DIR = os.path.dirname(os.path.abspath(os.sys.executable))
+YTDLP = os.path.join(SCRIPTS_DIR, "yt-dlp.exe")
+FFMPEG_DIR = SCRIPTS_DIR
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 jobs = {}
+
+
+def yt_dlp_command(*args):
+    executable = YTDLP if os.path.exists(YTDLP) else "yt-dlp"
+    return [executable, "--ffmpeg-location", FFMPEG_DIR, "--no-playlist", *args]
+
+
+def command_error(result):
+    lines = [line.strip() for line in result.stderr.splitlines() if line.strip()]
+    error_lines = [line for line in lines if "ERROR:" in line]
+    return (error_lines or lines or ["yt-dlp failed"])[-1]
 
 
 def run_download(job_id, url, format_choice, format_id):
     job = jobs[job_id]
     out_template = os.path.join(DOWNLOAD_DIR, f"{job_id}.%(ext)s")
 
-    cmd = ["yt-dlp", "--no-playlist", "-o", out_template]
+    cmd = yt_dlp_command("-o", out_template)
 
     if format_choice == "audio":
         cmd += ["-x", "--audio-format", "mp3"]
@@ -32,7 +47,7 @@ def run_download(job_id, url, format_choice, format_id):
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
         if result.returncode != 0:
             job["status"] = "error"
-            job["error"] = result.stderr.strip().split("\n")[-1]
+            job["error"] = command_error(result)
             return
 
         files = glob.glob(os.path.join(DOWNLOAD_DIR, f"{job_id}.*"))
@@ -85,11 +100,11 @@ def get_info():
     if not url:
         return jsonify({"error": "No URL provided"}), 400
 
-    cmd = ["yt-dlp", "--no-playlist", "-j", url]
+    cmd = yt_dlp_command("--skip-download", "--dump-single-json", url)
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
         if result.returncode != 0:
-            return jsonify({"error": result.stderr.strip().split("\n")[-1]}), 400
+            return jsonify({"error": command_error(result)}), 400
 
         info = json.loads(result.stdout)
 

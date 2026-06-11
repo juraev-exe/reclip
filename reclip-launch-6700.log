@@ -1,0 +1,25 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260611200021
+Username: JA\JJ
+RunAs User: JA\JJ
+Configuration Name: 
+Machine: JA (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Users\JJ\Documents\Projects_2026\reclip\run-reclip.ps1
+Process ID: 6700
+PSVersion: 5.1.26100.8521
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8521
+BuildVersion: 10.0.26100.8521
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>TerminatingError(Invoke-WebRequest): "The operation has timed out."
+Checking ReClip dependencies...
+
+
+Starting ReClip at http://127.0.0.1:8899
+Keep this window open while using ReClip.
+
