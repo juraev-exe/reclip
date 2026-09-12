@@ -11,21 +11,14 @@ Set-Location $projectDir
 Start-Transcript -Path $logFile -Append | Out-Null
 
 try {
-    try {
-        Invoke-WebRequest -UseBasicParsing $url -TimeoutSec 2 | Out-Null
-        Write-Host "ReClip is already running. Opening it now..."
-        Start-Process $url
-        return
-    } catch {
-        # No existing server is listening, so continue with startup.
-    }
-
     if (-not (Test-Path $python)) {
         Write-Host "Setting up ReClip for the first run..."
         py -m venv $venvDir
+        $env:PATH = "$scriptsDir;$env:PATH"
+    } else {
+        $env:PATH = "$scriptsDir;$env:PATH"
     }
 
-    $env:PATH = "$scriptsDir;$env:PATH"
     $env:PORT = "8899"
 
     Write-Host "Checking ReClip dependencies..."
@@ -44,12 +37,6 @@ try {
     Write-Host "Starting ReClip at $url"
     Write-Host "Keep this window open while using ReClip."
     Write-Host ""
-
-    $browserOpener = Start-Process -FilePath "powershell.exe" -ArgumentList @(
-        "-NoProfile",
-        "-WindowStyle", "Hidden",
-        "-Command", "& { for (`$i = 0; `$i -lt 30; `$i++) { try { Invoke-WebRequest -UseBasicParsing '$url' -TimeoutSec 1 | Out-Null; Start-Process '$url'; break } catch { Start-Sleep -Milliseconds 500 } } }"
-    ) -WindowStyle Hidden -PassThru
 
     & $python (Join-Path $projectDir "app.py")
     if ($LASTEXITCODE -ne 0) {

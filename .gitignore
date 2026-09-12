@@ -8,3 +8,13 @@ assets/*.mov
 .env.local
 .env.production
 .env.development
+
+# Local browser/session data and temporary scripts
+cookies.txt
+history.json
+scratch/
+*cookie*.py
+*cookies*.py
+
+# Runtime logs
+*.log

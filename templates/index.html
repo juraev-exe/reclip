@@ -9,59 +9,87 @@
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f4f1eb;
-      --fg: #3a3a38;
-      --accent: #e85d2a;
-      --accent-hover: #d04e1f;
-      --muted: #9c9889;
-      --card: #fff;
-      --card-border: #e2ded6;
-      --success: #2d8a4e;
-      --error: #c43d3d;
-      --radius: 14px;
-      --shimmer: linear-gradient(90deg, #ebe8e2 25%, #f0ede7 50%, #ebe8e2 75%);
+      --bg: #040507;
+      --fg: #f5f7fb;
+      --accent: #4de7ff;
+      --accent-hover: #a2f7ff;
+      --accent-glow: rgba(77, 231, 255, 0.22);
+      --muted: #8d97a8;
+      --card: rgba(13, 17, 24, 0.88);
+      --card-surface: rgba(18, 22, 31, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --success: #77f7ad;
+      --error: #ff7188;
+      --radius: 16px;
+      --shimmer: linear-gradient(90deg, rgba(255, 255, 255, 0.02) 25%, rgba(255, 255, 255, 0.07) 50%, rgba(255, 255, 255, 0.02) 75%);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'DM Mono', monospace;
-      background: var(--bg);
+      background:
+        radial-gradient(1100px circle at 12% -8%, rgba(77, 231, 255, 0.16), transparent 32%),
+        radial-gradient(900px circle at 88% 8%, rgba(119, 247, 173, 0.08), transparent 28%),
+        radial-gradient(700px circle at 50% 110%, rgba(255, 113, 136, 0.07), transparent 26%),
+        linear-gradient(180deg, #040507 0%, #07090d 100%);
       color: var(--fg);
       min-height: 100vh;
       overflow-x: hidden;
+      color-scheme: dark;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: -20%;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(77, 231, 255, 0.08), transparent 18%),
+        radial-gradient(circle at 82% 14%, rgba(119, 247, 173, 0.05), transparent 16%),
+        radial-gradient(circle at 70% 82%, rgba(255, 113, 136, 0.04), transparent 18%);
+      filter: blur(38px);
+      opacity: 0.85;
     }
 
     body::after {
       content: '';
       position: fixed;
       inset: 0;
-      opacity: 0.03;
+      opacity: 0.06;
       pointer-events: none;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
       background-size: 128px;
     }
 
     .page {
-      max-width: 620px;
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
       margin: 0 auto;
-      padding: 60px 24px 80px;
+      padding: 72px 24px 88px;
     }
 
     .brand { margin-bottom: 48px; }
     .brand h1 {
       font-family: 'Instrument Serif', serif;
-      font-size: 4.2rem;
+      font-size: clamp(3.5rem, 8vw, 4.6rem);
       font-weight: 400;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.05em;
       line-height: 1;
       color: var(--fg);
+      text-shadow: 0 0 24px rgba(77, 231, 255, 0.12);
     }
-    .brand h1 em { font-style: italic; color: var(--accent); }
+    .brand h1 em {
+      font-style: italic;
+      color: var(--accent);
+      text-shadow: 0 0 20px rgba(77, 231, 255, 0.32);
+    }
     .brand p {
       margin-top: 10px;
       font-size: 0.78rem;
-      color: var(--muted);
+      color: #9aa4b8;
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }
@@ -69,21 +97,27 @@
     textarea {
       width: 100%;
       padding: 18px 20px;
-      border: 1.5px solid var(--card-border);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: var(--radius);
-      background: var(--card);
+      background: rgba(8, 10, 14, 0.94);
       color: var(--fg);
       font-family: 'DM Mono', monospace;
       font-size: 0.88rem;
       outline: none;
       resize: none;
       min-height: 56px;
-      transition: border-color 0.25s, box-shadow 0.25s;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        0 18px 42px rgba(0, 0, 0, 0.28);
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
       margin-bottom: 6px;
     }
     textarea:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(232, 93, 42, 0.08);
+      box-shadow:
+        0 0 0 4px rgba(77, 231, 255, 0.12),
+        0 20px 48px rgba(0, 0, 0, 0.4);
+      transform: translateY(-1px);
     }
     textarea::placeholder { color: var(--muted); }
 
@@ -99,13 +133,15 @@
       gap: 10px;
       margin-bottom: 6px;
       align-items: center;
+      flex-wrap: wrap;
     }
     .pill-group {
       display: flex;
-      border: 1.5px solid var(--card-border);
-      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
       overflow: hidden;
-      background: var(--card);
+      background: rgba(10, 12, 17, 0.92);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
     }
     .pill {
       padding: 9px 18px;
@@ -119,26 +155,39 @@
       letter-spacing: 0.03em;
       text-transform: uppercase;
     }
-    .pill.active { background: var(--fg); color: var(--bg); }
+    .pill.active {
+      background: linear-gradient(180deg, rgba(77, 231, 255, 0.18), rgba(77, 231, 255, 0.08));
+      color: var(--fg);
+      box-shadow: inset 0 0 0 1px rgba(77, 231, 255, 0.22);
+    }
     .pill:not(.active):hover { color: var(--fg); }
 
     .fetch-btn {
       flex: 1;
       padding: 10px 20px;
       border: none;
-      border-radius: 10px;
-      background: var(--accent);
-      color: #fff;
+      border-radius: 12px;
+      background: linear-gradient(180deg, var(--accent) 0%, #1cd0ea 100%);
+      color: #021014;
       font-family: 'DM Mono', monospace;
       font-size: 0.82rem;
       font-weight: 500;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
       letter-spacing: 0.04em;
       text-transform: uppercase;
+      box-shadow:
+        0 16px 32px rgba(77, 231, 255, 0.16),
+        0 0 0 1px rgba(255, 255, 255, 0.08) inset;
     }
-    .fetch-btn:hover { background: var(--accent-hover); }
-    .fetch-btn:active { transform: scale(0.98); }
+    .fetch-btn:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+      box-shadow:
+        0 20px 36px rgba(77, 231, 255, 0.22),
+        0 0 24px rgba(77, 231, 255, 0.12);
+    }
+    .fetch-btn:active { transform: translateY(0); }
     .fetch-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
     /* Cards */
@@ -147,12 +196,18 @@
     .card {
       display: flex;
       gap: 14px;
-      border: 1.5px solid var(--card-border);
-      border-radius: var(--radius);
-      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(18, 22, 31, 0.96), rgba(10, 13, 19, 0.9)),
+        var(--card-surface);
       padding: 14px;
       margin-bottom: 10px;
       animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow:
+        0 22px 52px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(18px);
     }
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(12px); }
@@ -163,9 +218,10 @@
       width: 120px;
       min-width: 120px;
       height: 80px;
-      border-radius: 8px;
+      border-radius: 10px;
       overflow: hidden;
-      background: var(--card-border);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       flex-shrink: 0;
       position: relative;
     }
@@ -187,7 +243,7 @@
     .card-thumb .no-thumb svg {
       width: 28px;
       height: 28px;
-      opacity: 0.5;
+      opacity: 0.7;
     }
 
     /* Shimmer skeleton for loading state */
@@ -220,7 +276,7 @@
     }
     .card-title {
       font-family: 'Instrument Serif', serif;
-      font-size: 1rem;
+      font-size: 1.06rem;
       line-height: 1.3;
       color: var(--fg);
       margin-bottom: 2px;
@@ -230,7 +286,7 @@
     }
     .card-meta {
       font-size: 0.68rem;
-      color: var(--muted);
+      color: #92a0b6;
       letter-spacing: 0.03em;
       text-transform: uppercase;
       margin-bottom: 8px;
@@ -245,10 +301,10 @@
 
     .card-dl-btn {
       padding: 6px 14px;
-      border: none;
-      border-radius: 7px;
-      background: var(--fg);
-      color: var(--bg);
+      border: 1px solid rgba(77, 231, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(77, 231, 255, 0.12);
+      color: var(--accent);
       font-family: 'DM Mono', monospace;
       font-size: 0.7rem;
       font-weight: 500;
@@ -257,10 +313,22 @@
       letter-spacing: 0.03em;
       text-transform: uppercase;
     }
-    .card-dl-btn:hover { background: #2d2d2a; }
+    .card-dl-btn:hover {
+      border-color: rgba(77, 231, 255, 0.35);
+      background: rgba(77, 231, 255, 0.18);
+      box-shadow: 0 0 0 3px rgba(77, 231, 255, 0.08);
+    }
     .card-dl-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .card-dl-btn.done { background: var(--success); color: #fff; }
-    .card-dl-btn.error { background: var(--error); color: #fff; }
+    .card-dl-btn.done {
+      background: rgba(119, 247, 173, 0.16);
+      color: var(--success);
+      border-color: rgba(119, 247, 173, 0.25);
+    }
+    .card-dl-btn.error {
+      background: rgba(255, 113, 136, 0.14);
+      color: var(--error);
+      border-color: rgba(255, 113, 136, 0.26);
+    }
 
     .card-status {
       font-size: 0.68rem;
@@ -272,26 +340,26 @@
 
     .q-chip {
       padding: 4px 10px;
-      border: 1.5px solid var(--card-border);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 6px;
-      background: transparent;
+      background: rgba(255, 255, 255, 0.03);
       color: var(--muted);
       font-family: 'DM Mono', monospace;
       font-size: 0.65rem;
       cursor: pointer;
       transition: all 0.2s;
-    }
+      }
     .q-chip.active {
-      border-color: var(--fg);
-      color: var(--fg);
-      background: rgba(26,26,24,0.04);
+      border-color: rgba(77, 231, 255, 0.28);
+      color: var(--accent);
+      background: rgba(77, 231, 255, 0.08);
     }
-    .q-chip:hover:not(.active) { border-color: var(--muted); }
+    .q-chip:hover:not(.active) { border-color: rgba(255, 255, 255, 0.18); color: var(--fg); }
 
     /* Error card */
     .card.card-error {
-      border-color: rgba(196, 61, 61, 0.2);
-      background: rgba(196, 61, 61, 0.03);
+      border-color: rgba(255, 113, 136, 0.22);
+      background: linear-gradient(180deg, rgba(34, 14, 20, 0.88), rgba(16, 10, 14, 0.9));
     }
     .card-error-icon {
       width: 100%;
@@ -299,7 +367,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(196, 61, 61, 0.08);
+      background: rgba(255, 113, 136, 0.08);
       color: var(--error);
     }
     .card-error-icon svg {
@@ -328,10 +396,10 @@
     .dl-all-btn {
       flex: 1;
       padding: 12px;
-      border: none;
-      border-radius: 10px;
-      background: var(--fg);
-      color: var(--bg);
+      border: 1px solid rgba(77, 231, 255, 0.22);
+      border-radius: 12px;
+      background: rgba(77, 231, 255, 0.12);
+      color: var(--fg);
       font-family: 'DM Mono', monospace;
       font-size: 0.82rem;
       font-weight: 500;
@@ -339,9 +407,84 @@
       transition: all 0.2s;
       letter-spacing: 0.04em;
       text-transform: uppercase;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
     }
-    .dl-all-btn:hover { background: #2d2d2a; }
+    .dl-all-btn:hover {
+      background: rgba(77, 231, 255, 0.16);
+      border-color: rgba(77, 231, 255, 0.32);
+      box-shadow: 0 0 0 3px rgba(77, 231, 255, 0.08);
+    }
     .dl-all-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .history {
+      margin-top: 44px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .history-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .history-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.7rem;
+      font-weight: 400;
+      text-shadow: 0 0 18px rgba(77, 231, 255, 0.08);
+    }
+    .history-clear, .history-action {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+    }
+    .history-clear:hover, .history-action:hover { color: var(--accent); }
+    .history-empty {
+      color: var(--muted);
+      font-size: 0.72rem;
+      padding: 18px 0;
+    }
+    .history-item {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .history-thumb {
+      width: 72px;
+      height: 48px;
+      border-radius: 7px;
+      object-fit: cover;
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .history-name {
+      font-family: 'Instrument Serif', serif;
+      font-size: 0.95rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .history-meta {
+      color: var(--muted);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+    .history-actions {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+    }
+    .history-action.download { color: var(--success); }
+    .history-action.disabled { opacity: 0.4; cursor: default; }
 
     .spin {
       display: inline-block;
@@ -364,6 +507,11 @@
       line-height: 1.8;
     }
 
+    ::selection {
+      background: rgba(77, 231, 255, 0.22);
+      color: var(--fg);
+    }
+
     /* Mobile */
     @media (max-width: 500px) {
       .brand h1 { font-size: 3rem; }
@@ -377,6 +525,9 @@
       .card-title { white-space: normal; }
       .controls { flex-wrap: wrap; }
       .fetch-btn { width: 100%; }
+      .history-item { grid-template-columns: 56px minmax(0, 1fr); }
+      .history-thumb { width: 56px; height: 42px; }
+      .history-actions { grid-column: 2; }
     }
   </style>
 </head>
@@ -400,6 +551,14 @@
 
     <div id="cards" class="cards"></div>
 
+    <section class="history">
+      <div class="history-head">
+        <h2 class="history-title">History</h2>
+        <button class="history-clear" id="clearHistoryBtn" onclick="clearHistory()">Clear history</button>
+      </div>
+      <div id="historyList"><div class="history-empty">No downloads yet.</div></div>
+    </section>
+
     <div class="footer">
       YouTube &middot; TikTok &middot; Instagram &middot; Twitter/X &middot; Reddit &middot; Facebook<br>
       Vimeo &middot; Twitch &middot; Dailymotion &middot; SoundCloud &middot; Loom &middot; Streamable<br>
@@ -410,6 +569,7 @@
   <script>
     let currentFormat = 'video';
     let cardData = [];
+    let historyData = [];
 
     function setFormat(btn) {
       document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
@@ -618,6 +778,9 @@
             format: currentFormat,
             format_id: c.selectedFormatId,
             title: c.title || '',
+            thumbnail: c.thumbnail || '',
+            uploader: c.uploader || '',
+            duration: c.duration,
           }),
         });
         const data = await res.json();
@@ -648,6 +811,7 @@
             c.filename = data.filename;
             renderCard(idx);
             saveCard(idx);
+            loadHistory();
           } else if (data.status === 'error') {
             clearInterval(iv);
             c.status = 'error';
@@ -684,6 +848,61 @@
 
       if (btn) { btn.disabled = false; btn.textContent = 'Download All'; }
     }
+
+    function fmtHistoryDate(value) {
+      if (!value) return '';
+      return new Date(value).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+    }
+
+    async function loadHistory() {
+      try {
+        const res = await fetch('/api/history');
+        historyData = await res.json();
+        renderHistory();
+      } catch {
+        document.getElementById('historyList').innerHTML = '<div class="history-empty">Could not load history.</div>';
+      }
+    }
+
+    function renderHistory() {
+      const list = document.getElementById('historyList');
+      document.getElementById('clearHistoryBtn').style.display = historyData.length ? '' : 'none';
+      if (!historyData.length) {
+        list.innerHTML = '<div class="history-empty">No downloads yet.</div>';
+        return;
+      }
+      list.innerHTML = historyData.map(item => `
+        <div class="history-item">
+          ${item.thumbnail
+            ? `<img class="history-thumb" src="${esc(item.thumbnail)}" alt="">`
+            : '<div class="history-thumb"></div>'}
+          <div>
+            <div class="history-name" title="${esc(item.title)}">${esc(item.title)}</div>
+            <div class="history-meta">${esc(item.format)} · ${esc(fmtHistoryDate(item.completed_at))}</div>
+          </div>
+          <div class="history-actions">
+            ${item.file_available
+              ? `<a class="history-action download" href="/api/history/${encodeURIComponent(item.id)}/file">Save</a>`
+              : '<span class="history-action disabled">Missing</span>'}
+            <a class="history-action" href="${esc(item.url)}" target="_blank" rel="noopener">Source</a>
+            <button class="history-action" onclick="removeHistory('${esc(item.id)}')">Remove</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function removeHistory(id) {
+      await fetch(`/api/history/${encodeURIComponent(id)}`, { method: 'DELETE' });
+      loadHistory();
+    }
+
+    async function clearHistory() {
+      if (!confirm('Clear all download history? Downloaded files will be kept.')) return;
+      await fetch('/api/history', { method: 'DELETE' });
+      loadHistory();
+    }
+
+    loadHistory();
   </script>
 </body>
 </html>
