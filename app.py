@@ -5,6 +5,7 @@ import json
 import subprocess
 import threading
 import sys
+import shutil
 from datetime import datetime, timezone
 from flask import Flask, request, jsonify, send_file, render_template
 
@@ -50,6 +51,8 @@ def yt_dlp_command(*args):
     cmd = [executable]
     if os.path.isfile(COOKIE_FILE) and os.path.getsize(COOKIE_FILE) > 0:
         cmd += ["--cookies", COOKIE_FILE]
+    if shutil.which("node"):
+        cmd += ["--js-runtimes", "node"]
     cmd += ["--ffmpeg-location", FFMPEG_DIR, "--no-playlist", *args]
     return cmd
 
@@ -57,7 +60,9 @@ def yt_dlp_command(*args):
 def command_error(result):
     lines = [line.strip() for line in result.stderr.splitlines() if line.strip()]
     error_lines = [line for line in lines if "ERROR:" in line]
-    return (error_lines or lines or ["yt-dlp failed"])[-1]
+    if error_lines:
+        return error_lines[-1]
+    return (lines or ["yt-dlp failed"])[-1]
 
 
 def load_history():
