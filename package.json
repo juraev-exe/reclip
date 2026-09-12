@@ -1,0 +1,11 @@
+{
+  "name": "reclip",
+  "version": "1.0.0",
+  "description": "Free media downloader",
+  "main": "app.py",
+  "scripts": {
+    "start": "powershell -Command \"if (Test-Path .venv) { .venv\\Scripts\\python.exe app.py } else { python app.py }\""
+  },
+  "author": "",
+  "license": "MIT"
+}

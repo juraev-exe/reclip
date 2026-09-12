@@ -20,6 +20,27 @@ YTDLP = os.path.join(SCRIPTS_DIR, "yt-dlp.exe")
 FFMPEG_DIR = SCRIPTS_DIR
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
+# Helper to find yt-dlp executable
+def get_ytdlp_path():
+    # 1. Check if we're in a venv and yt-dlp is there
+    venv_bin = "Scripts" if os.name == "nt" else "bin"
+    venv_exe = "yt-dlp.exe" if os.name == "nt" else "yt-dlp"
+    
+    # Try looking in the current python's directory (standard for venv)
+    local_path = os.path.join(os.path.dirname(sys.executable), venv_exe)
+    if os.path.exists(local_path):
+        return local_path
+        
+    # 2. Try looking in a .venv or venv folder in the project root
+    for venv_name in [".venv", "venv"]:
+        path = os.path.join(os.path.dirname(__file__), venv_name, venv_bin, venv_exe)
+        if os.path.exists(path):
+            return path
+            
+    # 3. Fallback to system path
+    return "yt-dlp"
+
+YTDLP = get_ytdlp_path()
 jobs = {}
 history_lock = threading.Lock()
 
@@ -77,6 +98,17 @@ def public_history(entry):
     item = {key: value for key, value in entry.items() if key != "file"}
     item["file_available"] = os.path.isfile(entry.get("file", ""))
     return item
+
+
+def get_ffmpeg_path():
+    try:
+        import imageio_ffmpeg
+        return imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        return "ffmpeg"
+
+
+FFMPEG = get_ffmpeg_path()
 
 
 def run_download(job_id, url, format_choice, format_id):
