@@ -14,6 +14,7 @@ APP_DIR = os.path.dirname(os.path.abspath(__file__))
 DOWNLOAD_DIR = os.path.join(APP_DIR, "downloads")
 HISTORY_FILE = os.path.join(APP_DIR, "history.json")
 COOKIE_FILE = os.path.join(APP_DIR, "cookies.txt")
+COOKIE_BROWSER = os.environ.get("RECLIP_BROWSER", "").strip()
 INFO_TIMEOUT = int(os.environ.get("YTDLP_INFO_TIMEOUT", "180"))
 DOWNLOAD_TIMEOUT = int(os.environ.get("YTDLP_DOWNLOAD_TIMEOUT", "600"))
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(sys.executable))
@@ -49,7 +50,11 @@ history_lock = threading.Lock()
 def yt_dlp_command(*args):
     executable = YTDLP if os.path.exists(YTDLP) else "yt-dlp"
     cmd = [executable]
-    if os.path.isfile(COOKIE_FILE) and os.path.getsize(COOKIE_FILE) > 0:
+    target_url = next((arg for arg in reversed(args) if isinstance(arg, str) and "://" in arg), "")
+    use_browser_cookies = COOKIE_BROWSER and "instagram.com" in target_url.lower()
+    if use_browser_cookies:
+        cmd += ["--cookies-from-browser", COOKIE_BROWSER]
+    elif not use_browser_cookies and os.path.isfile(COOKIE_FILE) and os.path.getsize(COOKIE_FILE) > 0 and "instagram.com" in target_url.lower():
         cmd += ["--cookies", COOKIE_FILE]
     if shutil.which("node"):
         cmd += ["--js-runtimes", "node"]

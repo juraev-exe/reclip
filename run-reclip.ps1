@@ -20,6 +20,7 @@ try {
     }
 
     $env:PORT = "8899"
+    $env:RECLIP_BROWSER = "chrome"
 
     Write-Host "Checking ReClip dependencies..."
     & $python -m pip install --disable-pip-version-check --quiet -r (Join-Path $projectDir "requirements.txt")
